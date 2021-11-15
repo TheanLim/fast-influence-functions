@@ -1,0 +1,64 @@
+Folders:
+ - export
+ - faiss_index
+ - logs
+ - mnli_retrain_infuence
+ - runs
+ - tmp-output
+ - tuned_param
+ - zbash_files_sbatch
+ 
+ 
+Files:
+ - create_FAISS_index.ipynb
+ - MainTest.ipynb
+ - zNotes_added_filesFolders
+ - SelfCodes.ipynb
+ - self_codes.py
+ 
+=================================
+export
+ - To mount Glue and HANS data per author instructions. This is needed for training the base models.
+   Trained (fined tuned) base models are used during experiments.
+  
+faiss_index
+ - To store all generated faiss indices (needed for running experiments).
+  
+logs
+ - Logging output from sbatch runs. Useful for debugging and estimating time needed for a run.
+  
+mnli_retrain_influence
+ - Needed for running experiments.
+   
+runs
+ - Autologging from running HF.
+    
+tmp-output
+ -  CURRENTLY EMPTY - Why does it exist?
+
+tuned_param
+ - Trained (fined-tuned) model params are saved here.
+ 
+zbash_files_sbatch
+ - Saves all the bash files used to train base models and run experiments.
+ 
+==================================
+create_FAISS_index.ipynb
+ - Used to create faiss indices
+ 
+MainTest.ipynb
+ - Acts as a sandbox to test if codes run properly before running using sbatch
+ 
+zNotes_added_filesFolders
+ - Notes files and folders added, and the reason of it.
+
+SelfCodes.ipynb
+ - To test codes written by myself
+ 
+self_codes.py
+ - Codes written by Thean. Some are used to replicate experiment results.
+ - Utilities functions
+ 
+recall_at_m.py
+ - Codes by Thean. To calculate and plot recall@m
+ 
