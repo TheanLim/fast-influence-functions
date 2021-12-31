@@ -646,6 +646,89 @@ def imitator_viz(
     return fig
 
 #####################################################
+#import matplotlib.pyplot as plt 
+#import numpy as np
+
+def error_correction_viz(lsc_data, title):
+    
+    baseline = {
+        'loss': {
+            'lexical_overlap': 1.7321148809045552,
+            'subsequence': 1.516138620302081,
+            'constituent': 1.34275316093117
+    },
+        'accuracy': {
+            'lexical_overlap': 0.4973,
+            'subsequence': 0.5225,
+            'constituent': 0.512
+        }
+    }
+
+    color_map = {"harmful-lexical_overlap": "darkred",
+                "harmful-subsequence": "tomato",
+                "harmful-constituent": "lightsalmon",#gold
+                "helpful-lexical_overlap": "darkgreen",
+                "helpful-subsequence": "darkcyan",
+                "helpful-constituent": "darkseagreen"}
+
+    rs = 2
+    cs = 3
+    r=0
+    c=0
+
+    # Squeeze = false forces ax to always be 2dimensional
+    fig, ax = plt.subplots(rs,cs,sharey='row', squeeze=False)#, dpi=150)
+    fig.set_figwidth(60)
+
+    Xs = np.arange(11)
+    heuristics = ["lexical_overlap", "subsequence", "constituent"]
+    influences = ["helpful", "harmful", "random"]
+    loss_acc = ["loss", "accuracy"]
+
+    for r in range(len(loss_acc)):
+        la = loss_acc[r]
+        for c in range(len(heuristics)):
+            h = heuristics[c]
+            base_value = baseline[la][h]
+
+            for name, value_dict in lsc_data.items():
+                for infl in influences:
+                    
+                    data = np.array(value_dict[la][h][infl])
+                    data_mean = data.mean(axis=0)
+                    data_max = data.max(axis=0)
+                    data_min = data.min(axis=0)
+                    line = ax[r, c].plot(Xs, np.insert(data_mean, 0, base_value),
+                                     color='gray' if infl=='random' else color_map[infl+ "-"+name],
+                                     linestyle='--' if infl=='random' else None,
+                                     label = infl+ "-"+name+" (mean)" if r==0 and c ==0 else "_nolegend_")
+
+                    fill = ax[r, c].fill_between(Xs, np.insert(data_max, 0, base_value), np.insert(data_min, 0, base_value),
+                                     alpha=0.1,
+                                     color='gray' if infl=='random' else color_map[infl+ "-"+name],
+                                     #label = infl+ "-"+name+ " (min/max)" if r==0 and c ==0 else "_nolegend_"
+                                    )
+
+                if r == 0: 
+                    ax[r, c].set_ylabel("Loss")
+                else:
+                    ax[r, c].set_ylabel("Accuracy")
+                ax[r, c].set_xlabel("Time Step")
+                ax[r, c].set_title(h.upper(), fontsize=15)
+
+
+    fig.legend(loc="lower center", ncol=3,prop={'size': 15})    
+    fig.set_figwidth(40)
+    fig.set_figheight(20)
+    plt.suptitle(title,size=55)
+    for c in range(cs):
+        plt.sca(ax[0, c])
+        plt.yticks(np.arange(0.8, 2.6, 0.2))
+        plt.sca(ax[1, c])
+        plt.yticks(np.arange(0.450, 0.675, 0.025))
+        
+    return fig
+#####################################################
 ################## Utilities ########################
 #####################################################
 def intersection(lst1:List, lst2:List)->List: 
