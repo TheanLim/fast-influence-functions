@@ -237,7 +237,6 @@ def compute_influences_simplified(
         elif direction == "dissimilar":
             features_rev = -1*features
             _, KNN_indices = faiss_index.search(k=k, queries=features_rev)
-            print("Dissimilar:" ,KNN_indices)
         elif direction == "mixed":
             middle_index = k//2 # floor division rounds down
             _, KNN_indices = faiss_index.search(k=middle_index, queries=features)

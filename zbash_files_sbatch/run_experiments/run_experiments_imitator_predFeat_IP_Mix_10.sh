@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=40Gb
 #SBATCH --time=8:00:00
-#SBATCH --output=logs/run_experiments_imitator_predFeatureMix_10_log.txt
+#SBATCH --output=logs/run_experiments_imitator_predFeatureMix_10_REDO_log.txt
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100-sxm2:1
 

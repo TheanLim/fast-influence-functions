@@ -41,6 +41,9 @@ class HansHelper(object):
         self._hans_eval_df = pd.read_csv(constants.HANS_EVAL_FILE_NAME, sep="\t")
         self._hans_train_dataset = hans_train_dataset
         self._hans_eval_dataset = hans_eval_dataset
+        #Thean Add
+        self.rand_state = np.random.RandomState(123)
+        #Thean End
 
     def get_indices_of_heuristic(
             self,
@@ -84,10 +87,18 @@ class HansHelper(object):
         # Thean: Get the indices of the original raw data if they match the heuristics
         indices = self.get_indices_of_heuristic(
             mode=mode, heuristic=heuristic)
-
+        
+        #Thean modified
         sampled_indices = np.random.choice(
             indices, size=size, replace=False)
-
+        
+        #print(sampled_indices)
+        _,_,pos,_,_ = np.random.get_state()
+        print("Random State: ", pos)
+        #sampled_indices = self.rand_state.choice(
+        #    indices, size=size, replace=False)
+        #Thean End
+        
         sampled_data = [dataset[index] for index in sampled_indices]
         batched_data = default_data_collator(sampled_data)
         if return_raw_data is False:

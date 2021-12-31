@@ -31,7 +31,6 @@ Table 3:
 Experiments are repeated 3 times, fine-tuning is applied repeatedly for 10 iterations. 
 For each iteration, we select 10 validation data-points as the “anchor” data-points, 
 update parameters for one gradient step on 10 fine-tuning data-points with learning rate 10−4
-.
 '''
 
 
@@ -62,12 +61,15 @@ VERSION_2_LEARNING_RATE_CHOICES = [1e-4]
 # trained on A, fine-tuned on B, and then evaluated on C
 # train_task_name is the B
 def main(
-        train_task_name: str,
+        train_task_name: str,  # Thean ["mnli-2", "hans"]
         train_heuristic: str,  # Thean one from ["lexical_overlap", "subsequence", "constituent"]
         eval_heuristics: Optional[List[str]] = None,
         num_replicas: Optional[int] = None,
         use_parallel: bool = True,
         version: Optional[str] = None,
+        #Thean Add
+        similarity:str = "feature"
+        #Thean End
 ) -> Dict[str, List[Dict[str, Any]]]:
 
     if train_task_name not in ["mnli-2", "hans"]:
@@ -129,7 +131,9 @@ def main(
     faiss_index = influence_helpers.load_faiss_index(
         trained_on_task_name="mnli-2",
         train_task_name=train_task_name,
-        #similarity ="pred_feature"  #Thean Add PREDFEAT
+        #Thean Add
+        similarity =similarity  
+        #Thean End
     )
 
     output_mode = glue_output_modes["mnli-2"]  # output_mode = "classification"
@@ -169,6 +173,7 @@ def main(
         # Thean Add
         # C.3 Details
         # We repeat the Step 2-4 for 10 iterations. 
+        # Thean: This is the number of "fine-tuning model"
         # Thean End
         NUM_STEPS = 10
         num_total_experiments = (
@@ -178,13 +183,14 @@ def main(
             len(VERSION_2_LEARNING_RATE_CHOICES) *  # Thean i.e. 1
             NUM_STEPS
         ) # Thean default num_total_experiments = 90
-
-        with tqdm(total=num_total_experiments) as pbar:
+        
+        #with tqdm(total=num_total_experiments, disable=True) as pbar: 
+        with tqdm(total=num_total_experiments, disable=True) as pbar:
             for experiment_type in EXPERIMENT_TYPES:  # Thean: ["most-helpful", "most-harmful", "random"]
                 for replica_index in range(num_replicas):  # Thean i.e. 3
                     
                     # Thean add: we get different and randomly chosen 10 data on each iteration
-                    # ** hans_eval_heuristic_inputs = transformers.default_data_collator(hans_eval_heuristic_raw_inputs)
+                    # Sample anchor data-points every step
                     (hans_eval_heuristic_inputs,
                      hans_eval_heuristic_raw_inputs) = hans_helper.sample_batch_of_heuristic(
                         mode="eval",
@@ -222,6 +228,9 @@ def main(
                                     version_2_learning_rate=version_2_learning_rate,   #Thean: i.e. 1e-4
                                     hans_eval_heuristic_inputs=hans_eval_heuristic_inputs,          #Thean: i.e. size of 10
                                     hans_eval_heuristic_raw_inputs=hans_eval_heuristic_raw_inputs,  #Thean: i.e. size of 10
+                                    #Thean Add
+                                    similarity = similarity
+                                    #Thean End
                                 )
 
                                 output_collections[
@@ -240,7 +249,7 @@ def main(
             f"{train_task_name}."
             f"{train_heuristic}."
             f"{num_replicas}."
-            f"{use_parallel}_featSim.pth")  #Thean Add PREDFEAT
+            f"{use_parallel}_{similarity}.pth")  #Thean Add PREDFEAT
 
     return output_collections
 
@@ -263,6 +272,9 @@ def one_experiment(
     version_2_learning_rate: Optional[float], #Thean: i.e. 1e-4
     hans_eval_heuristic_inputs: Dict[str, Any],           #Thean: i.e. size of 10
     hans_eval_heuristic_raw_inputs: List[InputFeatures],  #Thean: i.e. size of 10
+    #Thean Add
+    similarity:str = "feature"
+    #Thean End
 ) -> Tuple[Dict[str, Any], Optional[torch.nn.Module]]:
     if task_model.device.type != "cuda":
         raise ValueError("The model is supposed to be on CUDA")
@@ -272,7 +284,15 @@ def one_experiment(
     if version_2_learning_rate is None:
         raise ValueError
 
-    if experiment_type in ["most-harmful", "most-helpful"]:  # Thean: one of ["most-helpful", "most-harmful", "random"]
+    if experiment_type in ["most-harmful", "most-helpful"]:  # Thean: one of ["most-helpful", "most-harmful"]
+        
+        if similarity == "pred_feature":
+            if experiment_type == "most-harmful":
+                direction = "dissimilar"
+            elif experiment_type == "most-helpful":
+                direction = "similar"
+        elif similarity == "feature":
+            direction = "similar"
 
         influences = influence_helpers.compute_influences_simplified(
             k=DEFAULT_KNN_K,
@@ -287,17 +307,19 @@ def one_experiment(
             device_ids=[1, 2, 3],
             precomputed_s_test=None,
             faiss_index_use_mean_features_as_query=True,
-            #similarity= "pred_feature", #Thean Add PREDFEAT
-            #metric= "inner_product",
-            #direction= "mixed"
+            #Thean Add
+            similarity= similarity,
+            metric= "inner_product" if similarity == "pred_feature" else "L2",
+            direction= direction
+            # Thean End
         )
         helpful_indices, harmful_indices = misc_utils.get_helpful_harmful_indices_from_influences_dict(
-            influences, n=version_2_num_datapoints)
+            influences)#Thean, n=version_2_num_datapoints)
         if experiment_type == "most-helpful":
-            datapoint_indices = helpful_indices
+            datapoint_indices = helpful_indices[:version_2_num_datapoints]
 
         if experiment_type == "most-harmful":
-            datapoint_indices = harmful_indices
+            datapoint_indices = harmful_indices[:version_2_num_datapoints]
 
     if experiment_type == "random":
         # s_test = None
@@ -308,7 +330,8 @@ def one_experiment(
             len(train_dataset),
             size=len(train_dataset),
             replace=False)
-
+    
+    print(experiment_type, ": ", datapoint_indices)
     loss_collections = {}
     accuracy_collections = {}
 

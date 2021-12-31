@@ -129,17 +129,21 @@ def hans_augmentation_experiments(
     # The model used is trained on mnli-2, fine-tuned on `train_task_name`, 
     # and evaluated on HANS. See Figure 6(a) and 6(b) - v2 paper. OR figure 7 of the v1 paper
     # End Thean
-    for train_task_name in ["mnli-2"]:#, "hans"]: 
+    for train_task_name in ["mnli-2"]:#, "mnli-2"]: 
         #for train_heuristic in hans.DEFAULT_EVAL_HEURISTICS: # Thean: ["lexical_overlap", "subsequence", "constituent"]
-         for train_heuristic in ["subsequence"]: #Thean
-            for version in ["new-only-z", "new-only-ztest", "new-z-and-ztest"]:
+         for train_heuristic in ["lexical_overlap"]: #Thean
+            for version in ["new-only-z"]:#, "new-only-ztest", "new-z-and-ztest"]:
                 # Thean: each inner loop takes 3++ hours if not using parallel
                 hans.main(
                     train_task_name=train_task_name,
                     train_heuristic=train_heuristic,
                     num_replicas=num_replicas,
                     use_parallel=USE_PARALLEL,
-                    version=version)
+                    version=version,
+                    #Thean Add
+                    similarity = "pred_feature"
+                    #Thean End
+                )
 
 
 def imitator_experiments(
