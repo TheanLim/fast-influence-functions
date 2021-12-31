@@ -18,6 +18,20 @@ Codes are heavily annotated to facilitate understandings.
 **Improved Heuristic:**
 ![imitator_predFeat_IP](figs/experiment_plots_copy/imitator/Loss_of_the_Imitator_Mode_Feature+Predictive_Similarity_InnerProduct.png)
 
+## Error Correction
+### MultiNLI→ HANS→ HANS
+**Replication of the original method:**
+![error_correction_hans_feat_L2](figs/experiment_plots_copy/hans_augmentation/Hans_Augmentation(HANS)_Feature_Similarity_L2.png)
+<br />
+**Improved Heuristic:**
+![error_correction_hans_predFeat_IP](figs/experiment_plots_copy/hans_augmentation/Hans_Augmentation(HANS)_Feature_Predictive_Similarity_InnerProduct.png)
+### MultiNLI→ HANS→ HANS
+**Replication of the original method:**
+![error_correction_mnli_feat_L2](figs/experiment_plots_copy/hans_augmentation/Hans_Augmentation(MNLI)_Feature_Similarity_L2.png)
+<br />
+**Improved Heuristic:**
+![error_correction_mnli_predFeat_IP](figs/experiment_plots_copy/hans_augmentation/Hans_Augmentation(MNLI)_Feature_Predictive_Similarity_InnerProduct.png)
+
 
 
 # Requirements
