@@ -25,7 +25,7 @@ Codes are heavily annotated to facilitate understandings.
 <br />
 **Improved Heuristic:**
 ![error_correction_hans_predFeat_IP](figs/experiment_plots_copy/hans_augmentation/Hans_Augmentation(HANS)_Feature_Predictive_Similarity_InnerProduct.png)
-### MultiNLI→ HANS→ HANS
+### MultiNLI→ MultiNLI→ HANS
 **Replication of the original method:**
 ![error_correction_mnli_feat_L2](figs/experiment_plots_copy/hans_augmentation/Hans_Augmentation(MNLI)_Feature_Similarity_L2.png)
 <br />
