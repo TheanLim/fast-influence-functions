@@ -13,10 +13,10 @@ Codes are heavily annotated to facilitate understandings.
 
 ## Explainability of Influential Examples
 **Replication of the original method:**
-![imitator_feat_L2](figs/experiment_plots_copy/imitator/Loss of the Imitator Model - Feature Similarity (L2).png)
+![imitator_feat_L2](figs/experiment_plots_copy/imitator/Loss_of_the_Imitator_Model_Feature_Similarity_L2.png)
 <br />
 **Improved Heuristic:**
-![imitator_predFeat_IP](figs/experiment_plots_copy/imitator/Loss of the Imitator Model - Feature+Predictive Similarity (InnerProduct).png)
+![imitator_predFeat_IP](figs/experiment_plots_copy/imitator/Loss_of_the_Imitator_Model_Feature_Predictive_Similarity _InnerProduct.png)
 
 ## Error Correction
 ### MultiNLI→ HANS→ HANS
