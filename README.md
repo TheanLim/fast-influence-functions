@@ -16,7 +16,7 @@ Codes are heavily annotated to facilitate understandings.
 ![imitator_feat_L2](figs/experiment_plots_copy/imitator/Loss_of_the_Imitator_Model_Feature_Similarity_L2.png)
 <br />
 **Improved Heuristic:**
-![imitator_predFeat_IP](figs/experiment_plots_copy/imitator/Loss_of_the_Imitator_Model_Feature_Predictive_Similarity _InnerProduct.png)
+![imitator_predFeat_IP](figs/experiment_plots_copy/imitator/Loss_of_the_Imitator_Model_Feature_Predictive_Similarity_IP.png)
 
 ## Error Correction
 ### MultiNLI→ HANS→ HANS
