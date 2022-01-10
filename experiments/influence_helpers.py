@@ -15,6 +15,7 @@ from influence_utils import nn_influence_utils
 # Thean Add
 import faiss
 import self_code
+import numpy as np
 # Thean End
 
 
@@ -238,6 +239,7 @@ def compute_influences_simplified(
             features_rev = -1*features
             _, KNN_indices = faiss_index.search(k=k, queries=features_rev)
         elif direction == "mixed":
+            '''
             middle_index = k//2 # floor division rounds down
             _, KNN_indices = faiss_index.search(k=middle_index, queries=features)
             
@@ -249,6 +251,24 @@ def compute_influences_simplified(
             # Then concatenate list
             KNN_indices = KNN_indices[0] + KNN_indices_rev[0]
             KNN_indices.sort() # sort it ascendingly so that nn_influence_utils.compute_influences() runs faster
+            '''
+            _, KNN_indices = faiss_index.search(k=k, queries=features)
+            _, KNN_indices_rev = faiss_index.search(k=k, queries=-1*features)
+             # convert to list for easier manipulation ; it originally looks like np.array([[3455,4903,...]])
+            KNN_indices, KNN_indices_rev = list(KNN_indices[0]), list(KNN_indices_rev[0])
+            
+            KNN_indices_set = set()
+            while len(KNN_indices_set)<k:
+                sim, dissim = KNN_indices.pop(0), KNN_indices_rev.pop(0)
+                #print(sim, dissim)
+                KNN_indices_set.add(sim)
+                KNN_indices_set.add(dissim)
+            # In case len()>k, choose top k only
+            KNN_indices = np.array(list(KNN_indices_set)[:k])
+            print(KNN_indices[:50])
+            print(np.array(list(KNN_indices_set)[:k])[:50])
+            KNN_indices.sort() # sort it ascendingly so that nn_influence_utils.compute_influences() runs faster
+            print(len(KNN_indices_set))
         else:
             raise ValueError("Choose direction from `similar`, `dissimilar` or `mixed`.")
         # End Thean

@@ -420,7 +420,8 @@ def imitator_main(mode: str,
             learning_rate=5e-5,
             logging_steps=100),
     )
-
+    
+    # Thean Add: random: bool = False for misc.get_dataloader()
     eval_instance_data_loader = misc_utils.get_dataloader(
         mnli_eval_dataset,
         batch_size=1,

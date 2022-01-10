@@ -23,8 +23,8 @@ from influence_utils import faiss_utils
 
 def recall_main(ms = [10,100, 1000],
                 ks = [10, 100, 1000, 5000, 10000, 50000, 100000],
-                correct_pattern = 'experiments_outputs/KNN-recall.only-correct.3.1000.*',
-                incorrect_pattern = 'experiments_outputs/KNN-recall.only-incorrect.3.1000.*',
+                correct_pattern = 'experiments_outputs/recall@m/actual_influence_function_ground_truth/KNN-recall.only-correct.3.1000.*',
+                incorrect_pattern = 'experiments_outputs/recall@m/actual_influence_function_ground_truth/KNN-recall.only-incorrect.3.1000.*',
                 similarity = "feature",
                 metric: str = "L2",
                 mixed_direction: bool = False,
@@ -598,6 +598,12 @@ def imitator_viz(
                 color = color_map[tag]
                 data = np.array(y[tag])
                 is_random_data_point = "random" in tag
+                
+                # Rename Tag
+                if tag =="most-positive-influential":
+                    tag = "most-harmful"
+                if tag == "most-negative-influential":
+                    tag = "most-helpful"
                 
                 if data.shape[0] != 1:
                     data_mean = data.mean(axis=0)

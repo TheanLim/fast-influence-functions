@@ -172,7 +172,7 @@ def imitator_experiments(
         #Thean Add
         similarity = similarity,
         metric = metric,
-        direction = "similar"
+        direction = "mixed"
         # End Thean
     )
     
@@ -183,7 +183,7 @@ def imitator_experiments(
         #Thean Add
         similarity = similarity,
         metric = metric,
-        direction = "dissimilar"
+        direction = "mixed"
         # End Thean
     )
 
