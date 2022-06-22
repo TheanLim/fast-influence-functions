@@ -6,10 +6,10 @@ Codes are heavily annotated to facilitate understandings.
 
 ## Recall of kNN
 **Replication of the original method:**
-![recall_feat_L2](figs/experiment_plots_copy/recall@m/recall@m_feature_similar_L2.png)
+![recall_feat_L2](figs/experiment_plots_copy/recall@m/recall@m_feature_similar_L2.svg)
 <br />
 **Improved Heuristic:**
-![recall_predFeat_IP](figs/experiment_plots_copy/recall@m/recall@m_pred_feature_dis_n_similar_InnerProduct.png)
+![recall_predFeat_IP](figs/experiment_plots_copy/recall@m/recall@m_pred_feature_dis_n_similar_InnerProduct.svg)
 
 ## Explainability of Influential Examples
 **Replication of the original method:**
